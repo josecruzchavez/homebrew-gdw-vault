@@ -1,6 +1,6 @@
 cask "gdw-vault" do
-  version "1.6.0"
-  sha256 "04444a3dd6bafa60a3a6a984978a8ac8a031498968cfe31e0229cb63c0005ece"
+  version "1.6.1"
+  sha256 "caf541feee73b03f813434a65cc6c829f58902196f23c8a6c438fd27f419562b"
 
   url "https://github.com/josecruzchavez/gdw-vault/releases/download/v#{version}/GDW-Vault-#{version}-universal.zip"
   name "GDW Vault"

@@ -23,8 +23,8 @@ startup and XPC/MCP access, and links the `gdw-vault` CLI command into Homebrew'
 `bin` directory.
 
 Uninstalling the cask removes the app but preserves the local SQLite database
-and Keychain credentials. The standalone `.pkg` installer will be added to a
-future release.
+and Keychain credentials. A signed and notarized standalone `.pkg` is also
+available in each release.
 
 ## Update the cask
 
@@ -33,8 +33,8 @@ For each release, update `version` and `sha256` in
 ZIP asset, not a local build:
 
 ```sh
-gh api repos/josecruzchavez/gdw-vault/releases/tags/v1.6.0 \
-  --jq '.assets[] | select(.name == "GDW-Vault-1.6.0-universal.zip") | .digest | sub("sha256:"; "")'
+gh api repos/josecruzchavez/gdw-vault/releases/tags/v1.6.1 \
+  --jq '.assets[] | select(.name == "GDW-Vault-1.6.1-universal.zip") | .digest | sub("sha256:"; "")'
 ```
 
 ## Validate
