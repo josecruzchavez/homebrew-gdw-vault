@@ -33,8 +33,8 @@ For each release, update `version` and `sha256` in
 ZIP asset, not a local build:
 
 ```sh
-gh api repos/josecruzchavez/gdw-vault/releases/tags/v1.6.1 \
-  --jq '.assets[] | select(.name == "GDW-Vault-1.6.1-universal.zip") | .digest | sub("sha256:"; "")'
+gh api repos/josecruzchavez/gdw-vault/releases/tags/v1.6.2 \
+  --jq '.assets[] | select(.name == "GDW-Vault-1.6.2-universal.zip") | .digest | sub("sha256:"; "")'
 ```
 
 ## Validate
