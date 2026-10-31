@@ -12,6 +12,8 @@ jobs:
   audit:
     name: brew audit + style
     runs-on: macos-14
+    env:
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
