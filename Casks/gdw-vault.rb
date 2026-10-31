@@ -15,6 +15,71 @@ cask "gdw-vault" do
   depends_on macos: :ventura
 
   app "GDW Vault.app"
+  binary "#{appdir}/GDW Vault.app/Contents/MacOS/GDW Vault", target: "gdw-vault"
+
+  postflight_steps do
+    run "/bin/bash", args: [
+      "-c",
+      <<~BASH,
+        set -euo pipefail
+        user_id="$(/usr/bin/id -u)"
+        gui_domain="gui/$user_id"
+        service_target="$gui_domain/mx.gdw.vault"
+        launch_agent="$HOME/Library/LaunchAgents/mx.gdw.vault.plist"
+        app_executable="$1"
+
+        if /bin/launchctl print "$service_target" >/dev/null 2>&1; then
+          /bin/launchctl bootout "$service_target"
+        fi
+
+        /bin/mkdir -p "$(dirname "$launch_agent")"
+        cat > "$launch_agent" <<PLIST
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>Label</key>
+            <string>mx.gdw.vault</string>
+            <key>ProgramArguments</key>
+            <array>
+                <string>$app_executable</string>
+            </array>
+            <key>RunAtLoad</key>
+            <true/>
+            <key>KeepAlive</key>
+            <dict>
+                <key>SuccessfulExit</key>
+                <false/>
+            </dict>
+            <key>MachServices</key>
+            <dict>
+                <key>mx.gdw.vault.db.$user_id</key>
+                <true/>
+            </dict>
+        </dict>
+        </plist>
+        PLIST
+        /bin/chmod 644 "$launch_agent"
+        /bin/launchctl bootstrap "$gui_domain" "$launch_agent"
+      BASH
+      "--",
+      "{{appdir}}/GDW Vault.app/Contents/MacOS/GDW Vault",
+    ]
+  end
+
+  uninstall_preflight_steps do
+    run "/bin/bash", args: [
+      "-c",
+      <<~BASH,
+        set -euo pipefail
+        service_target="gui$(/usr/bin/id -u)/mx.gdw.vault"
+        if /bin/launchctl print "$service_target" >/dev/null 2>&1; then
+          /bin/launchctl bootout "$service_target"
+        fi
+        /bin/rm -f "$HOME/Library/LaunchAgents/mx.gdw.vault.plist"
+      BASH
+    ]
+  end
 
   uninstall quit: "mx.gdw.vault"
 
@@ -22,9 +87,8 @@ cask "gdw-vault" do
     GDW Vault runs in the menu bar. Connection metadata stays in the local
     SQLite database and credentials remain in the macOS Keychain.
 
-    This Cask installs the app only; it does not create the LaunchAgent or CLI
-    wrapper used for automatic startup and MCP/XPC registration. See the
-    installation instructions at https://github.com/josecruzchavez/gdw-vault.
+    The Cask registers the LaunchAgent for automatic startup and XPC/MCP access,
+    and links the gdw-vault CLI command into Homebrew's bin directory.
 
     Uninstalling the Cask leaves the local database and Keychain items intact.
   EOS

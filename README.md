@@ -9,14 +9,22 @@ Homebrew tap for **GDW Vault** on macOS. This repository is separate from the
 brew install --cask josecruzchavez/gdw-vault/gdw-vault
 ```
 
+On Homebrew 7, if the first install stops because the cask is untrusted, run
+this once and retry the install command:
+
+```sh
+brew trust --cask josecruzchavez/gdw-vault/gdw-vault
+```
+
 The cask downloads the universal, Developer ID-signed and Apple-notarized
 application from the [latest GDW Vault release](https://github.com/josecruzchavez/gdw-vault/releases/latest).
-It installs the app in `/Applications`. It does not configure the LaunchAgent
-or CLI wrapper; see the [GDW Vault installation guide](https://github.com/josecruzchavez/gdw-vault#instalación-actualización-y-desinstalación)
-for the source installation that registers those components.
+It installs the app in `/Applications`, configures the LaunchAgent for automatic
+startup and XPC/MCP access, and links the `gdw-vault` CLI command into Homebrew's
+`bin` directory.
 
 Uninstalling the cask removes the app but preserves the local SQLite database
-and Keychain credentials.
+and Keychain credentials. The standalone `.pkg` installer will be added to a
+future release.
 
 ## Update the cask
 
