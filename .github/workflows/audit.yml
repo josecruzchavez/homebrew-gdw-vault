@@ -15,11 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Add checked-out tap
+        run: brew tap --custom-remote josecruzchavez/gdw-vault "$GITHUB_WORKSPACE"
+
       - name: Audit
-        run: brew audit --cask --strict ./Casks/gdw-vault.rb
+        run: brew audit --cask --strict josecruzchavez/gdw-vault/gdw-vault
 
       - name: Style
         run: brew style ./Casks/gdw-vault.rb
 
       - name: Livecheck
-        run: brew livecheck --cask ./Casks/gdw-vault.rb
+        run: brew livecheck --cask josecruzchavez/gdw-vault/gdw-vault

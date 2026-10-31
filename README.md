@@ -26,7 +26,7 @@ ZIP asset, not a local build:
 
 ```sh
 gh api repos/josecruzchavez/gdw-vault/releases/tags/v1.6.0 \
-  --jq '.assets[] | select(.name == "GDW-Vault-1.6.0-universal.zip") | .digest'
+  --jq '.assets[] | select(.name == "GDW-Vault-1.6.0-universal.zip") | .digest | sub("sha256:"; "")'
 ```
 
 ## Validate
@@ -34,9 +34,10 @@ gh api repos/josecruzchavez/gdw-vault/releases/tags/v1.6.0 \
 Run these commands on a Mac with Homebrew installed:
 
 ```sh
-brew audit --cask --strict ./Casks/gdw-vault.rb
+brew tap --custom-remote josecruzchavez/gdw-vault "$PWD"
+brew audit --cask --strict josecruzchavez/gdw-vault/gdw-vault
 brew style ./Casks/gdw-vault.rb
-brew livecheck --cask ./Casks/gdw-vault.rb
+brew livecheck --cask josecruzchavez/gdw-vault/gdw-vault
 ```
 
 The GitHub Actions workflow runs the same checks on pushes and pull requests.
